@@ -16,3 +16,6 @@ Kolejnym zagadnieniem jest sytuacja, gdy paragon wychodzi poza krawędzie zdjęc
 wyjątek `FailedFindEdgesException`, co wymaga dalszej pracy nad obsługą takich scenariuszy.
 
 ![Przykład 2](rdm_img/ex2.png)
+
+
+Więcej zdjęć jest pod linkiem: https://expressexpense.com/blog/free-receipt-images-ocr-machine-learning-dataset/
