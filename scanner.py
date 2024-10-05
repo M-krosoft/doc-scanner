@@ -109,15 +109,15 @@ def process_image(image):
 
     image = imutils.resize(image, height=500)
 
-    edged_image = detect_edges(image, 25, 200)
+    edged_image = detect_edges(image, 75, 200)
     screen_contour = find_contours(edged_image)
 
-    # cv2.imshow("Edged", edged_image)
-    #
-    # cv2.drawContours(image, [screen_contour], -1, (0, 255, 0), 2)
-    # cv2.imshow("CNT", image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow("Edged", edged_image)
+
+    cv2.drawContours(image, [screen_contour], -1, (0, 255, 0), 2)
+    cv2.imshow("CNT", image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     if screen_contour is None:
         raise FailedFindEdgesException
@@ -126,7 +126,7 @@ def process_image(image):
     return t_img
 
 
-img = read_and_transform_image(image_name='1090-receipt.jpg')
+img = read_and_transform_image(image_name='1101-receipt.jpg')
 transformed_image = process_image(img)
 cv2.imshow("Contours", imutils.resize(img, height=650))
 cv2.imshow("Scanned", imutils.resize(transformed_image, height=650))

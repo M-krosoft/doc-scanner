@@ -17,5 +17,10 @@ wyjątek `FailedFindEdgesException`, co wymaga dalszej pracy nad obsługą takic
 
 ![Przykład 2](rdm_img/ex2.png)
 
+## Przykład 3
+
+Tak to powinno wyglądać dla każdego paragonu. Zauważmy, że dla tego zdjęcia cały paragon został na nim umieszczony, jest mało cienia oraz jednolite tło.
+![Przykład 3](rdm_img/ex3.png)
+
 
 Więcej zdjęć jest pod linkiem: https://expressexpense.com/blog/free-receipt-images-ocr-machine-learning-dataset/
