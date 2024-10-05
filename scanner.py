@@ -11,6 +11,15 @@ current_dir = os.getcwd()
 assets_path = os.path.join(current_dir, "images", )
 
 
+def run_scan_by_path(path):
+    img = read_and_transform_image(path)
+    return process_image(img)
+
+
+def run_scan_by_image(image):
+    return process_image(image)
+
+
 # order entry points: top left -> top right -> bot right -> bot left
 def order_points(points):
     print(f'input={points}')
@@ -26,6 +35,16 @@ def order_points(points):
 
     print(f'ordered_points={rect}')
     return rect
+
+
+def add_image_borders(image):
+    height, width = image.shape[:2]
+    cv2.line(image, (0, 0), (width - 1, 0), (0, 0, 0), 2)
+    cv2.line(image, (0, height - 1), (width - 1, height - 1), (0, 0, 0), 2)
+    cv2.line(image, (0, 0), (0, height - 1), (0, 0, 0), 2)
+    cv2.line(image, (width - 1, 0), (width - 1, height - 1), (0, 0, 0), 2)
+
+    return image
 
 
 def calculate_distance(point1, point2):
@@ -66,10 +85,6 @@ def read_and_transform_image(image_name):
     return image
 
 
-def calculate_image_ration(image):
-    return image.shape[0] / 500
-
-
 def detect_edges(image, threshold_lower=50, threshold_upper=150):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -82,14 +97,25 @@ def find_contours(edged_image):
     contours = imutils.grab_contours(contours)  # wyodrębnia kontury
     contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]  # choose 5 contours and sort descending
 
+    width, height = edged_image.shape[1], edged_image.shape[0]
+    image_contour = np.array([[(0, 0), (width - 1, 0), (width - 1, height - 1), (0, height - 1)]])
     screen_contour = None
+
     for contour in contours:
         peri = cv2.arcLength(contour, True)  # calculates lenght of contour
-        approx = cv2.approxPolyDP(contour, 0.02 * peri, True)  # approximate shape of polygon
+        approx = cv2.approxPolyDP(contour, 0.05 * peri, True)  # approximate shape of polygon
 
         if len(approx) == 4:  # we got rectangle :)
             screen_contour = approx
             break
+
+    if screen_contour is None:
+        screen_contour = image_contour
+    else:
+        area = cv2.contourArea(screen_contour)
+        img_area = cv2.contourArea(image_contour)
+        if img_area * 0.15 > area:
+            return image_contour
     return screen_contour
 
 
@@ -106,18 +132,16 @@ def process_image(image):
         raise ImageIsNoneException
     ratio = image.shape[0] / 500.0
     original_image = image.copy()
-
     image = imutils.resize(image, height=500)
 
     edged_image = detect_edges(image, 75, 200)
     screen_contour = find_contours(edged_image)
 
-    cv2.imshow("Edged", edged_image)
-
-    cv2.drawContours(image, [screen_contour], -1, (0, 255, 0), 2)
-    cv2.imshow("CNT", image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow("Edged", edged_image)
+    #
+    # cv2.drawContours(image, [screen_contour], -1, (0, 255, 0), 2)
+    # cv2.imshow("CNT", image)
+    # cv2.waitKey(0)
 
     if screen_contour is None:
         raise FailedFindEdgesException
@@ -126,7 +150,7 @@ def process_image(image):
     return t_img
 
 
-img = read_and_transform_image(image_name='1101-receipt.jpg')
+img = read_and_transform_image(image_name='1196-receipt.jpg')
 transformed_image = process_image(img)
 cv2.imshow("Contours", imutils.resize(img, height=650))
 cv2.imshow("Scanned", imutils.resize(transformed_image, height=650))
