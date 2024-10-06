@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="doc-scanner",
+    name="doc_scanner",
     version="1.0.0-alpha",
     packages=find_packages(),
     install_requires=[
