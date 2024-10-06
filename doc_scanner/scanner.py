@@ -5,7 +5,7 @@ import imutils
 import numpy as np
 from skimage.filters import threshold_local
 
-from exceptions import ImageIsNoneException, FailedFindEdgesException
+from .exceptions import ImageIsNoneException, FailedFindEdgesException
 
 current_dir = os.getcwd()
 assets_path = os.path.join(current_dir, "images", )
